@@ -236,7 +236,9 @@ function onDrop(e, list) {
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+$col-color: yellow;
+
 #columns-container {
     display: flex;
     flex-direction: row;
@@ -246,7 +248,7 @@ function onDrop(e, list) {
 }
 
 .col, #col-start {
-    background-color: yellow;
+    background-color: $col-color;
     margin: 10px;
     padding: 10px;
     width: calc(20% - 20px);

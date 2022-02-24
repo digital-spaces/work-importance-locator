@@ -220,24 +220,67 @@ function onDrop(e, list) {
 <template>
     <div id="columns-container">
         <div id="col-start" :rank=0 @drop="onDrop($event, 0)" @dragover.prevent @dragenter.prevent>
-            <h2>{{rankZero.length}} / 4</h2>
             <Card v-for="item in rankZero" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
             <!--<Card v-for="item in cards2" :id="item.letter" :desc="item.desc" :key="item.letter" />-->
         </div>
 
-        <div className='col' :rank=5 @drop="onDrop($event, 5)" @dragover.prevent @dragenter.prevent>
+        <div 
+            className='col' 
+            :rank=5 
+            @drop="onDrop($event, 5)" 
+            @dragover.prevent 
+            @dragenter.prevent 
+            :valid="rankFive.length==4 ? 'yes' : 'no'"
+        >
+            <h2>{{rankFive.length}} / 4</h2>
             <Card v-for="item in rankFive" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
-        <div className='col' :rank=4 @drop="onDrop($event, 4)" @dragover.prevent @dragenter.prevent>
+
+        <div 
+            className='col' 
+            :rank=4 
+            @drop="onDrop($event, 4)" 
+            @dragover.prevent 
+            @dragenter.prevent
+            :valid="rankFour.length==4 ? 'yes' : 'no'"
+        >
+            <h2>{{rankFour.length}} / 4</h2>
             <Card v-for="item in rankFour" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
-        <div className='col' :rank=3 @drop="onDrop($event, 3)" @dragover.prevent @dragenter.prevent>
+
+        <div 
+            className='col' 
+            :rank=3 
+            @drop="onDrop($event, 3)" 
+            @dragover.prevent 
+            @dragenter.prevent
+            :valid="rankThree.length==4 ? 'yes' : 'no'"
+        >
+            <h2>{{rankThree.length}} / 4</h2>
             <Card v-for="item in rankThree" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
-        <div className='col' :rank=2 @drop="onDrop($event, 2)" @dragover.prevent @dragenter.prevent>
+
+        <div 
+            className='col' 
+            :rank=2 
+            @drop="onDrop($event, 2)" 
+            @dragover.prevent 
+            @dragenter.prevent
+            :valid="rankTwo.length==4 ? 'yes' : 'no'"
+        >
+            <h2>{{rankTwo.length}} / 4</h2>
             <Card v-for="item in rankTwo" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
-        <div className='col' :rank=1 @drop="onDrop($event, 1)" @dragover.prevent @dragenter.prevent>
+
+        <div 
+            className='col' 
+            :rank=1 
+            @drop="onDrop($event, 1)" 
+            @dragover.prevent 
+            @dragenter.prevent
+            :valid="rankOne.length==4 ? 'yes' : 'no'"
+        >
+            <h2>{{rankOne.length}} / 4</h2>
             <Card v-for="item in rankOne" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
         <!--<CardColumn :rank=5 :cards="rankFive()" />
@@ -245,8 +288,8 @@ function onDrop(e, list) {
         <CardColumn :rank=3 :cards="rankThree()" />
         <CardColumn :rank=2 :cards="rankTwo()" />
         <CardColumn :rank=1 :cards="rankOne()" />-->
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/results" v-if="rankFive.length == 4 && rankFour.length == 4 && rankThree.length == 4 && rankTwo.length == 4 && rankOne.length == 4" class="submit">Submit</RouterLink>
+        <span v-else class="submit">About</span>
     </div>
 </template>
 

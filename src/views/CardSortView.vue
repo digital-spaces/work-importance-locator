@@ -245,6 +245,8 @@ function onDrop(e, list) {
         <CardColumn :rank=3 :cards="rankThree()" />
         <CardColumn :rank=2 :cards="rankTwo()" />
         <CardColumn :rank=1 :cards="rankOne()" />-->
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
     </div>
 </template>
 

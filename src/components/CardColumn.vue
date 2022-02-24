@@ -16,6 +16,6 @@ defineProps({
 
 <template>
     <div className='col' :rank=rank @drop="onDrop($event, rank)" @dragover.prevent @dragenter.prevent>
-        <Card v-for="item in cards" :id="item.letter" :desc="item.desc" :key="item.letter" :card="item" />
+        <Card v-for="item in this.cards" :id="item.letter" :desc="item.desc" :key="item.letter" :card="item" />
     </div>
 </template>

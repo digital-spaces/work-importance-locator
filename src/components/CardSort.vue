@@ -1,6 +1,6 @@
 <script setup>
 import Card from '@/components/Card.vue'
-import { computed } from "vue";
+import { computed, onMounted, reactive } from "vue";
 
 //import CardColumn from '@/components/CardColumn.vue'
 
@@ -27,7 +27,7 @@ import { computed } from "vue";
     "T" : "I could plan my work with little supervision."
 }*/
 
-var cards2 = [
+var cards2 = reactive({value:[
     {
         letter: "A",
         desc: "I make use of my abilities.",
@@ -128,13 +128,12 @@ var cards2 = [
         desc: "I could plan my work with little supervision.",
         rank: 0
     }
-]
+]});
 
 /*function rankZero() {
     return cards2.filter(item => item.rank === 0);
 }
 function rankOne() {
-    console.log("test");
     return cards2.filter(item => item.rank === 1);
 }
 function rankTwo() {
@@ -150,40 +149,59 @@ function rankFive() {
     return cards2.filter(item => item.rank === 5);
 }*/
 
+//let rankZero = cards2.filter(item => item.rank == 0);
+
 let rankZero = computed({
     get: () => 
-        cards2.filter(item => item.rank === 0)
+        cards2.value.filter(item => item.rank == 0)
 });
 let rankFive = computed({
     get: () => 
-        cards2.filter(item => item.rank === 5)
+        cards2.value.filter(item => item.rank == 5)
 });
 let rankFour = computed({
     get: () => 
-        cards2.filter(item => item.rank === 4)
+        cards2.value.filter(item => item.rank == 4)
 });
 let rankThree = computed({
     get: () => 
-        cards2.filter(item => item.rank === 3)
+        cards2.value.filter(item => item.rank == 3)
 });
 let rankTwo = computed({
     get: () => 
-        cards2.filter(item => item.rank === 2)
+        cards2.value.filter(item => item.rank == 2)
 });
 let rankOne = computed({
     get: () => 
-        cards2.filter(item => item.rank === 1)
+        cards2.value.filter(item => item.rank == 1)
 });
 
+/*let rankZero = [];
+let rankFive = [];
+let rankFour = [];
+let rankThree = [];
+let rankTwo = [];
+let rankOne = [];*/
 
 function onDrop(e, list) {
+    console.log(cards2.value);
     const itemID = e.dataTransfer.getData('itemID');
-    const item = this.cards2.find(item => item.letter == itemID);
+    const item = this.cards2.value.find(item => item.letter == itemID);
     item.rank = list;
+    
     console.log("test" + list);
     console.log(item);
-    console.log(cards2);
+    console.log(cards2.value);
+    console.log(rankZero.value);
+    console.log(cards2.value.filter(item => item.rank == 5));
+    console.log(rankZero.value.length);
 }
+
+/*onMounted(()=> {
+    console.log(rankZero);
+    rankZero = cards2.filter(item => item.rank == 0);
+    console.log(rankZero);
+})*/
 
 /*const types = {
     "Achievement" : ["A", "F"],
@@ -202,13 +220,8 @@ function onDrop(e, list) {
 
 <template>
     <div id="columns-container">
-        <div 
-          id="col-start"
-          :rank=0 
-          @drop="onDrop($event, 0)" 
-          @dragover.prevent 
-          @dragenter.prevent
-        >
+        <div id="col-start" :rank=0 @drop="onDrop($event, 0)" @dragover.prevent @dragenter.prevent>
+            <h2>{{rankZero.length}} / 5</h2>
             <Card v-for="item in rankZero" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
             <!--<Card v-for="item in cards2" :id="item.letter" :desc="item.desc" :key="item.letter" />-->
         </div>

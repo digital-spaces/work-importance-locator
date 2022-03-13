@@ -131,17 +131,8 @@ import { RouterLink, RouterView } from 'vue-router';
 
 <template>
   <div className="App">
-    <header>
-      <div class="wrapper">
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/results">About</RouterLink>
-        </nav>
-      </div>
-    </header>
-
-
     <main>
+      <h1>Work Importantance Locator</h1>
       <RouterView />
       <!--<CardSort />-->
     </main>
@@ -154,8 +145,16 @@ import { RouterLink, RouterView } from 'vue-router';
   </div>
 </template>
 
-<style>
+<style lang="scss">
+$page-width: 1440px;
+
 * {
   box-sizing: border-box;
 }
+
+main {
+    max-width: $page-width;
+    margin: auto;
+}
+
 </style>

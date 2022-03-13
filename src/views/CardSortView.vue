@@ -218,8 +218,14 @@ function onDrop(e, list) {
 </script>
 
 <template>
+    <p>A web form adaptation of O*NET's Work Importantance Locator.</p>
+    <p>Simply drag your priorities from the first column into the others, from most to least, then press Submit. Only 4 cards per column.</p>
+
+    <RouterLink to="/results" v-if="rankFive.length == 4 && rankFour.length == 4 && rankThree.length == 4 && rankTwo.length == 4 && rankOne.length == 4" class="submit">Submit</RouterLink>
+    <span v-else class="submit">Submit</span>
+
     <div id="columns-container">
-        <div id="col-start" :rank=0 @drop="onDrop($event, 0)" @dragover.prevent @dragenter.prevent>
+        <div :style="(rankZero.length == 0) ? 'display:none;' : ''" id="col-start" :rank=0 @drop="onDrop($event, 0)" @dragover.prevent @dragenter.prevent>
             <Card v-for="item in rankZero" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
             <!--<Card v-for="item in cards2" :id="item.letter" :desc="item.desc" :key="item.letter" />-->
         </div>
@@ -244,7 +250,8 @@ function onDrop(e, list) {
             @dragenter.prevent
             :valid="rankFour.length==4 ? 'yes' : 'no'"
         >
-            <h2>{{rankFour.length}} / 4</h2>
+            <h2>Rank 4</h2>
+            <h3>{{rankFour.length}} / 4</h3>
             <Card v-for="item in rankFour" :id="item.letter" :desc="item.desc" :key="item" :card="item" />
         </div>
 
@@ -288,8 +295,6 @@ function onDrop(e, list) {
         <CardColumn :rank=3 :cards="rankThree()" />
         <CardColumn :rank=2 :cards="rankTwo()" />
         <CardColumn :rank=1 :cards="rankOne()" />-->
-        <RouterLink to="/results" v-if="rankFive.length == 4 && rankFour.length == 4 && rankThree.length == 4 && rankTwo.length == 4 && rankOne.length == 4" class="submit">Submit</RouterLink>
-        <span v-else class="submit">About</span>
     </div>
 </template>
 
@@ -300,8 +305,8 @@ $col-color: yellow;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: auto;
-    max-width: 1400px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 .col, #col-start {
@@ -309,5 +314,18 @@ $col-color: yellow;
     margin: 10px;
     padding: 10px;
     width: calc(20% - 20px);
+}
+
+.submit {
+    background-color: green;
+    color: white;
+    padding: 20px;
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+span.submit {
+    background-color: gray;
 }
 </style>

@@ -1,5 +1,4 @@
 <script setup>
-import Card from '@/components/Card.vue'
 import onDrop from '@/components/CardSort.vue'
 
 defineProps({
@@ -7,15 +6,24 @@ defineProps({
         type: Number,
         required: true
     },
-    cards: {
+    list: {
         type: Array,
-        required: false
+        required: true
     }
 })
 </script>
 
 <template>
-    <div className='col' :rank=rank @drop="onDrop($event, rank)" @dragover.prevent @dragenter.prevent>
-        <Card v-for="item in this.cards" :id="item.letter" :desc="item.desc" :key="item.letter" :card="item" />
-    </div>
+        <div 
+            className='col'
+            :rank=rank
+            @drop="onDrop($event, rank)" 
+            @dragover.prevent 
+            @dragenter.prevent
+            :valid="list.length==4 ? 'yes' : 'no'"
+        >
+            <h2>Rank {{rank}}</h2>
+            <h3>{{list.length}} / 4</h3>
+            <slot/>
+        </div>
 </template>

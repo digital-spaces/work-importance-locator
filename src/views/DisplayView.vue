@@ -1,7 +1,11 @@
 <script setup>
+import { ref } from 'vue';
 import { onBeforeMount, reactive } from "@vue/runtime-core";
 import { cards2 } from "../App.vue";
 import { OnetWebService } from "../main.js";
+
+let currentZone = ref(null);
+let futureZone = ref(null);
 
 let workValues = {
     "Achievement" : 0,
@@ -13,6 +17,8 @@ let workValues = {
 };
 
 let workValuesSorted = reactive({value:[]});
+
+let jobs = reactive({value:[]});
 
 const values = {
     "Achievement" : ["A", "F"],
@@ -37,14 +43,37 @@ onBeforeMount(() => {
     workValuesSorted.value = Object.entries(workValues).sort((a,b) => b[1]-a[1]);
     //console.log(workValuesSorted.value);
 
-    fetchOccupations();
+    //fetchOccupations(1, "Relationships");
 })
 
-function fetchOccupations() {
+function fetchOccupations(zone, value) {
+    let list = [];
     let onet_ws = new OnetWebService("digitalspaces_dev");
-    onet_ws.call('about', null, function(vinfo) {
-        console.log(vinfo);
-    });
+    onet_ws.call('mnm/job_preparation/' + zone, 'start=1&end=40', function(vinfo) {
+        //console.log(vinfo.career);
+        vinfo.career.forEach((item) => {
+            //console.log(item.code);
+            onet_ws.call(`online/occupations/${item.code}/details/work_values/`, null, function(winfo) {
+                //console.log(winfo.element[0].name);
+                //console.log(item);
+                //console.log(winfo.element[0].name);
+                if (winfo.element[0].name == value) {
+                    jobs.value.push([item.code, item.title, item.href]);
+                    console.log(jobs.value);
+                    //console.log("Test " + [item.code, item.title, item.href]);
+                }
+            });
+        });
+    })
+
+    console.log(list);
+}
+
+function allOccupations(fZone, cZone, pValue, sValue) {
+    fetchOccupations(fZone,pValue);
+    fetchOccupations(cZone,pValue);
+    fetchOccupations(fZone,sValue);
+    fetchOccupations(cZone,sValue);
 }
 </script>
 
@@ -109,7 +138,22 @@ function fetchOccupations() {
                 <label for="futZone5">5</label>
             </div>
         </div>
-        <!--{{workValues}}-->
+
+        <!--{{workValues}}
+        {{futureZone}}
+        {{ jobs.value }}
+        {{workValuesSorted.value[0][0]}}
+        {{[[futureZone, currentZone, workValuesSorted.value[0][1], workValuesSorted.value[1][1]]]}}-->
+
+        <div v-if="currentZone > 0 && futureZone > 0">
+            <a @click="allOccupations(futureZone, currentZone, workValuesSorted.value[0][0], workValuesSorted.value[1][0])">See Jobs</a>
+        </div>
+
+        <div v-if="jobs.value.length > 0">
+            <li v-for="job in jobs.value" :key="job[0]">
+                <a :href="'https://www.onetonline.org/link/summary/' + job[0]">{{job[1]}}</a>
+            </li>
+        </div>
     </div>
 </template>
 

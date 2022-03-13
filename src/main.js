@@ -61,46 +61,45 @@ xhr.send();
 };
 
 OnetWebService.prototype._call_fetch = function(url, callback) {
-fetch(url, {
-    method: 'GET',
-    mode: 'cors',
-    credentials: 'omit',
-    headers: {
-    'Accept': 'application/json'
-    }
-})
-.then(function(response) {
-    if (response.status == 200 || response.status == 422) {
-    response.json()
-        .then(callback)
-        .catch(function(error) {
-        callback({ error: 'Call to ' + url + ' failed on JSON parse' });
-        });
-    } else {
-    callback({ error: 'Call to ' + url + ' failed with error code ' + response.status });
-    }
-})
-.catch(function(error) {
-    if (error.message) {
-    callback({ error: 'Call to ' + url + ' failed with reason: ' + error.message });
-    } else {
-    callback({ error: 'Call to ' + url + ' failed with unknown reason' });
-    }
-});
+    fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'omit',
+        headers: {
+        'Accept': 'application/json'
+        }
+    })
+    .then(function(response) {
+        if (response.status == 200 || response.status == 422) {
+        response.json()
+            .then(callback)
+            .catch(function(error) {
+            callback({ error: 'Call to ' + url + ' failed on JSON parse' });
+            });
+        } else {
+        callback({ error: 'Call to ' + url + ' failed with error code ' + response.status });
+        }
+    })
+    .catch(function(error) {
+        if (error.message) {
+        callback({ error: 'Call to ' + url + ' failed with reason: ' + error.message });
+        } else {
+        callback({ error: 'Call to ' + url + ' failed with unknown reason' });
+        }
+    });
 };
 
 OnetWebService.prototype.call = function(path, query, callback) {
-var url = this._config.baseURL + path + '?client=' + encodeURIComponent(this._config.auth.username);
-if (query !== null && query !== undefined) {
-    url += '&' + this._encode_query(query);
-}
-
-if (self.fetch) {
-    this._call_fetch(url, callback);
-} else {
-    this._call_xhr(url, callback);
-}
-
+    var url = this._config.baseURL + path + '?client=' + encodeURIComponent(this._config.auth.username);
+    if (query !== null && query !== undefined) {
+        url += '&' + query;
+    }
+    console.log(url);
+    if (self.fetch) {
+        this._call_fetch(url, callback);
+    } else {
+        this._call_xhr(url, callback);
+    }
 };
 
 const app = createApp(App)

@@ -1,5 +1,5 @@
 <script setup>
-import onDrop from '@/components/CardSort.vue'
+import onDrop from '@/views/CardSortView.vue'
 
 defineProps({
     rank: {
@@ -9,6 +9,10 @@ defineProps({
     list: {
         type: Array,
         required: true
+    },
+    onDrop: {
+        type: Function,
+        required: true
     }
 })
 </script>
@@ -17,7 +21,7 @@ defineProps({
         <div 
             className='col'
             :rank=rank
-            @drop="onDrop($event, rank)" 
+            @drop="onDrop($event, 4)"
             @dragover.prevent 
             @dragenter.prevent
             :valid="list.length==4 ? 'yes' : 'no'"

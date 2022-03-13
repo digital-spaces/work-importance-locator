@@ -125,7 +125,7 @@ export let cards2 = reactive({value:[
 
 <script setup>
 import { reactive } from "vue";
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
 //import CardSort from '@/components/CardSort.vue';
 </script>
 
@@ -138,7 +138,6 @@ import { RouterLink, RouterView } from 'vue-router';
     </main>
 
     <footer>
-      <p style="text-align: center"><a href="https://www.onetcenter.org/tools.html"><img src="https://www.onetcenter.org/image/link/onet-in-it.svg" style="width: 130px; height: 60px; border: none" alt="O*NET in-it"></a></p>
       <p>This page includes information from the <a href="https://www.onetcenter.org/tools.html">O*NET Career Exploration Tools</a> by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the <a href="/license_tools.html">O*NET Tools Developer License</a>. O*NET&reg; is a trademark of USDOL/ETA. Digital Spaces has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.</p>
       <p>Developer's note: the contents and purpose(s) of these tools have not been modified, only their format. The content, purpose(s) and functionality are otherwise identical to the paper-based WIL tool.</p>
     </footer>
@@ -146,15 +145,31 @@ import { RouterLink, RouterView } from 'vue-router';
 </template>
 
 <style lang="scss">
+@import url("@/assets/base.css");
 $page-width: 1440px;
+$text-color: #333;
+$footer-bg: #eee;
+$footer-text-size: 10px;
 
 * {
   box-sizing: border-box;
 }
 
 main {
+  color: $text-color;
+  margin: auto;
+  max-width: $page-width;
+}
+
+footer {
+  background-color: $footer-bg;
+  font-size: $footer-text-size;
+  margin-top: 30px;
+  padding: 40px 0;
+  p {
+    margin: 5px auto;
     max-width: $page-width;
-    margin: auto;
+  }
 }
 
 </style>

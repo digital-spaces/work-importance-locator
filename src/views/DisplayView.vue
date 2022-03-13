@@ -47,9 +47,8 @@ onBeforeMount(() => {
 })
 
 function fetchOccupations(zone, value) {
-    let list = [];
     let onet_ws = new OnetWebService("digitalspaces_dev");
-    onet_ws.call('mnm/job_preparation/' + zone, 'start=1&end=40', function(vinfo) {
+    onet_ws.call('mnm/job_preparation/' + zone, 'start=1&end=200', function(vinfo) {
         //console.log(vinfo.career);
         vinfo.career.forEach((item) => {
             //console.log(item.code);
@@ -58,26 +57,31 @@ function fetchOccupations(zone, value) {
                 //console.log(item);
                 //console.log(winfo.element[0].name);
                 if (winfo.element[0].name == value) {
-                    jobs.value.push([item.code, item.title, item.href]);
-                    console.log(jobs.value);
-                    //console.log("Test " + [item.code, item.title, item.href]);
+                    jobs.value.push([item.code, item.title]);
                 }
             });
         });
     })
-
-    console.log(list);
 }
 
 function allOccupations(fZone, cZone, pValue, sValue) {
+    jobs.value = [];
     fetchOccupations(fZone,pValue);
     fetchOccupations(cZone,pValue);
     fetchOccupations(fZone,sValue);
     fetchOccupations(cZone,sValue);
 }
+
+function comparator(a, b) {
+    if (a[1].toUpperCase() < b[1].toUpperCase()) return -1;
+    if (a[1].toUpperCase() > b[1].toUpperCase()) return 1;
+    return 0;
+}
 </script>
 
 <template>
+    <p>Review your scores, then select your current and future job zone. Press "See Jobs" for a personalized listing of jobs that suit your values and level of education, experience and training.</p>
+
     <div id="display-view">
         <!--{{workValuesSorted.value}}<br>
         {{workValuesSorted.value[0]}}<br>
@@ -100,8 +104,8 @@ function allOccupations(fZone, cZone, pValue, sValue) {
         </div>
 
         <div id="highest-work-values">
-            <p>Your highest score: {{ workValuesSorted.value[0][1] }}. Name of work value: {{ workValuesSorted.value[0][0] }}</p>
-            <p>Your next highest score: {{ workValuesSorted.value[1][1] }}. Name of work value: {{ workValuesSorted.value[1][0] }}</p>
+            <p>Your highest work value is {{ workValuesSorted.value[0][0] }} ({{ workValuesSorted.value[0][1] }}).</p>
+            <p>Your second-highest work value is {{ workValuesSorted.value[1][0] }} ({{ workValuesSorted.value[1][1] }}).</p>
             <div>
                 <span>Your current job zone: </span>
                 <input type="radio" id="curZone1" name="curZone" value="1" v-model="currentZone">
@@ -139,59 +143,55 @@ function allOccupations(fZone, cZone, pValue, sValue) {
             </div>
         </div>
 
-        <!--{{workValues}}
-        {{futureZone}}
-        {{ jobs.value }}
-        {{workValuesSorted.value[0][0]}}
-        {{[[futureZone, currentZone, workValuesSorted.value[0][1], workValuesSorted.value[1][1]]]}}-->
-
-        <div v-if="currentZone > 0 && futureZone > 0">
-            <a @click="allOccupations(futureZone, currentZone, workValuesSorted.value[0][0], workValuesSorted.value[1][0])">See Jobs</a>
+        <div v-if="currentZone > 0 && futureZone > 0 && currentZone != futureZone">
+            <a class="submit" @click="allOccupations(futureZone, currentZone, workValuesSorted.value[0][0], workValuesSorted.value[1][0])">See Jobs</a>
         </div>
 
-        <div v-if="jobs.value.length > 0">
-            <li v-for="job in jobs.value" :key="job[0]">
+        <ul v-if="jobs.value.length > 0" class="jobs">
+            <li v-for="job in jobs.value.sort(comparator)" :key="job[0]">
                 <a :href="'https://www.onetonline.org/link/summary/' + job[0]">{{job[1]}}</a>
             </li>
-        </div>
+        </ul>
     </div>
 </template>
 
 <style scoped lang="scss">
-#display-view {
-    max-width: 1440px;
-    margin: auto;
-}
-
-#work-value-worksheet {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: flex-start;
-}
-.work-value {
-    max-width: 200px;
-    background-color: bisque;
-    flex-basis: calc(100%/6);
-}
-
-.work-value h4 {
-    padding: 10px;
-    text-align: center;
-    margin: 0;
-}
-.work-value-row,
-.work-value-total {
-    clear: both;
-}
-.work-value-row span,
-.work-value-total span,
-.work-value-header span {
+@mixin work-value-spans {
     float: left;
     padding: 10px;
     text-align: center;
     width: 50%;
     position: relative;
+}
+
+#work-value-worksheet {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 20px 0px;
+}
+.work-value {
+    max-width: 200px;
+    background-color: bisque;
+    flex-basis: calc(100%/6);
+    h4 {
+        padding: 10px;
+        text-align: center;
+        margin: 0;
+    }
+    &-row,
+    &-total {
+        clear: both;
+        span {
+            @include work-value-spans;
+        }
+    }
+    &-header {
+        font-weight: bold;
+        span {
+            @include work-value-spans;
+        }
+    }
 }
 
 .work-value-row+.work-value-row span+span::before {
@@ -206,14 +206,34 @@ function allOccupations(fZone, cZone, pValue, sValue) {
     position: absolute;
 }
 
-.work-value-header {
-    font-weight: bold;
+#highest-work-values {
+    font-size: 18px;
+    input {
+        margin: 0 4px 0 10px;
+    }
 }
 
-#highest-work-values {
-    width: 700px;
-    margin: auto;
-    background-color: beige;
-    border: 2px solid red;
+.submit {
+    padding: 20px 40px;
+    text-transform: uppercase;
+    background-color: forestgreen;
+    display: inline-block;
+    color: white;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.jobs {
+    margin-top: 20px;
+    -moz-column-count: 4;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px;
+    padding-left: 0px;
+    li {
+        list-style-type: none;
+    }
 }
 </style>

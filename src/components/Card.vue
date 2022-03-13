@@ -34,9 +34,11 @@ defineProps({
     </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+$card-font: sculpin;
+$card-bg: white;
 .card {
-    background-color: white;
+    background-color: $card-bg;
     cursor: grab;
     display: flex;
     flex-direction: column;
@@ -44,10 +46,21 @@ defineProps({
     justify-content: space-around;
     margin: 5px;
     padding: 10px;
+    border-radius: 4px;
+    height: 150px;
+    p {
+        margin: 0;
+        text-align: center;
+        font-family: $card-font, sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        strong {
+            font-weight: 700;
+        }
+        i {
+            font-style: italic;
+        }
+    }
 }
 
-.card p {
-    margin: 0;
-    text-align: center;
-}
 </style>

@@ -30,7 +30,7 @@ let rankOne = computed({
 
 function onDrop(e, list) {
     const itemID = e.dataTransfer.getData('itemID');
-    const item = this.cards2.value.find(item => item.letter == itemID);
+    const item = cards2.value.find(item => item.letter == itemID);
     item.rank = list;
 }
 </script>

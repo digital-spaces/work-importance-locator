@@ -132,7 +132,7 @@ import { RouterView } from 'vue-router';
 <template>
   <div className="App">
     <main>
-      <h1>Work Importantance Locator</h1>
+      <h1>Work Importance Locator</h1>
       <RouterView />
       <!--<CardSort />-->
     </main>

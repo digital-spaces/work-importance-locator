@@ -160,6 +160,9 @@ main {
   color: $text-color;
   margin: auto;
   max-width: $page-width;
+  h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+  }
 }
 
 footer {

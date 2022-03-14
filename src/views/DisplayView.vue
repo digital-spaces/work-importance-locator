@@ -4,22 +4,14 @@ import { onBeforeMount, reactive } from "@vue/runtime-core";
 import { cards2 } from "../App.vue";
 import { OnetWebService } from "../main.js";
 
-let currentZone = ref(null);
-let futureZone = ref(null);
-
-let workValues = {
-    "Achievement" : 0,
-    "Independence" : 0,
-    "Recognition" : 0,
-    "Relationships" : 0,
-    "Support" : 0,
-    "Working Conditions" : 0
-};
-
-let workValuesSorted = reactive({value:[]});
-
-let jobs = reactive({value:[]});
-
+const valueDescriptions = {
+    "Achievement" : "If Achievement is your highest work value, look for jobs that let you use your best abilities. Look for work where you can see the results of your efforts. Explore jobs where you can get the feeling of accomplishment.",
+    "Independence" : "If Independence is your highest work value, look for jobs where they let you do things on your own initiative. Explore work where you can make decisions on your own.",
+    "Recognition" : "If Recognition is your highest work value, explore jobs with good possibilities for advancement. Look for work with prestige or with the potential for leadership.",
+    "Relationships" : "If Relationships is your highest work value, look for jobs where your co-workers are friendly. Look for work that lets you be of service to others. Explore jobs that do not make you do anything that goes against your sense of right and wrong.",
+    "Support" : "If Support is your highest work value, look for jobs where the company stands behind its workers and where the workers are comfortable with management’s style of supervision. Explore work in companies with a reputation for competent, considerate, and fair management.",
+    "Working Conditions" : "If Working Conditions is your highest work value, consider pay, job security, and good working conditions when looking at jobs. Look for work that suits your work style. Some people like to be busy all the time, or work alone, or have many different things to do. Explore jobs where you can take best advantage of your particular work style."
+}
 const values = {
     "Achievement" : ["A", "F"],
     "Independence" : ["I", "M", "T"],
@@ -28,6 +20,18 @@ const values = {
     "Support" : ["B", "P", "Q"],
     "Working Conditions" : ["C", "G", "J", "N", "R", "S"]
 }
+let workValues = {
+    "Achievement" : 0,
+    "Independence" : 0,
+    "Recognition" : 0,
+    "Relationships" : 0,
+    "Support" : 0,
+    "Working Conditions" : 0
+};
+let workValuesSorted = reactive({value:[]});
+let jobs = reactive({value:[]});
+let currentZone = ref(null); // Sets the radio box values.
+let futureZone = ref(null); // Sets the radio box values.
 
 onBeforeMount(() => {
     cards2.value.forEach((item) => {
@@ -41,21 +45,13 @@ onBeforeMount(() => {
     console.log(workValues);
 
     workValuesSorted.value = Object.entries(workValues).sort((a,b) => b[1]-a[1]);
-    //console.log(workValuesSorted.value);
-
-    //fetchOccupations(1, "Relationships");
 })
 
 function fetchOccupations(zone, value) {
     let onet_ws = new OnetWebService("digitalspaces_dev");
     onet_ws.call('mnm/job_preparation/' + zone, 'start=1&end=200', function(vinfo) {
-        //console.log(vinfo.career);
         vinfo.career.forEach((item) => {
-            //console.log(item.code);
             onet_ws.call(`online/occupations/${item.code}/details/work_values/`, null, function(winfo) {
-                //console.log(winfo.element[0].name);
-                //console.log(item);
-                //console.log(winfo.element[0].name);
                 if (winfo.element[0].name == value) {
                     jobs.value.push([item.code, item.title]);
                 }
@@ -71,21 +67,12 @@ function allOccupations(fZone, cZone, pValue, sValue) {
     fetchOccupations(fZone,sValue);
     fetchOccupations(cZone,sValue);
 }
-
-function comparator(a, b) {
-    if (a[1].toUpperCase() < b[1].toUpperCase()) return -1;
-    if (a[1].toUpperCase() > b[1].toUpperCase()) return 1;
-    return 0;
-}
 </script>
 
 <template>
     <p>Review your scores, then select your current and future job zone. Press "See Jobs" for a personalized listing of jobs that suit your values and level of education, experience and training.</p>
 
     <div id="display-view">
-        <!--{{workValuesSorted.value}}<br>
-        {{workValuesSorted.value[0]}}<br>
-        {{workValuesSorted.value[0][1]}}-->
         <div id="work-value-worksheet">
             <div v-for="item in Object.entries(values)" class="work-value" :value="item[0]" :key="item[0]">
                 <h4>{{item[0]}}</h4>
@@ -106,6 +93,33 @@ function comparator(a, b) {
         <div id="highest-work-values">
             <p>Your highest work value is {{ workValuesSorted.value[0][0] }} ({{ workValuesSorted.value[0][1] }}).</p>
             <p>Your second-highest work value is {{ workValuesSorted.value[1][0] }} ({{ workValuesSorted.value[1][1] }}).</p>
+            <h3>{{ workValuesSorted.value[0][0] }}</h3>
+            <p>{{ valueDescriptions[workValuesSorted.value[0][0]] }}</p>
+            <h3>{{ workValuesSorted.value[1][0] }}</h3>
+            <p>{{ valueDescriptions[workValuesSorted.value[1][0]] }}</p>
+        </div>
+
+        <div id="job-zones">
+            <h3>Job Zones</h3>
+            <p>A Job Zone is a group of occupations that are similar in these ways:</p>
+            <ul>
+                <li>How most people get into the job</li>
+                <li>How much overall experience people need to do the job</li>
+                <li>How much education people need to do the job</li>
+                <li>How much on-the-job training people need to do the job</li>
+            </ul>
+            <dl>
+                <dt>Job Zone 1</dt>
+                <dd>Occupations that need <i>Little</i> or <i>No</i> preparation.</dd>
+                <dt>Job Zone 2</dt>
+                <dd>Occupations that need <i>Some</i> preparation.</dd>
+                <dt>Job Zone 3</dt>
+                <dd>Occupations that need <i>Medium</i> preparation.</dd>
+                <dt>Job Zone 4</dt>
+                <dd>Occupations that need <i>Considerable</i> preparation.</dd>
+                <dt>Job Zone 5</dt>
+                <dd>Occupations that need <i>Extensive</i> preparation.</dd>
+            </dl>
             <div>
                 <span>Your current job zone: </span>
                 <input type="radio" id="curZone1" name="curZone" value="1" v-model="currentZone">
@@ -206,8 +220,21 @@ function comparator(a, b) {
     position: absolute;
 }
 
-#highest-work-values {
+#highest-work-values,
+#job-zones {
     font-size: 18px;
+    h3 {
+        margin-top: 5px;
+    }
+}
+
+#job-zones {
+    dt {
+        font-weight: 700;
+    }
+    dd {
+        margin-left: 20px;
+    }
     input {
         margin: 0 4px 0 10px;
     }

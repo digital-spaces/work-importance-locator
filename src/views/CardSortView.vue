@@ -38,6 +38,7 @@ function onDrop(e, list) {
 <template>
     <p>A web form adaptation of O*NET's Work Importantance Locator.</p>
     <p>Simply drag your priorities from the first column into the others, from most to least important, then press Submit. Only 4 cards per column.</p>
+    <p>Think about how important it would be for you to have a job like the one described on each card. Put each card in the column that best matches how important it is for you to have a job like the one described on the card.</p>
 
     <RouterLink to="/results" v-if="rankFive.length == 4 && rankFour.length == 4 && rankThree.length == 4 && rankTwo.length == 4 && rankOne.length == 4" class="submit">Submit</RouterLink>
     <span v-else class="submit">Submit</span>

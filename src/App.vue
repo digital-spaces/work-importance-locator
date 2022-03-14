@@ -140,6 +140,7 @@ import { RouterView } from 'vue-router';
     <footer>
       <p>This page includes information from the <a href="https://www.onetcenter.org/tools.html">O*NET Career Exploration Tools</a> by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the <a href="/license_tools.html">O*NET Tools Developer License</a>. O*NET&reg; is a trademark of USDOL/ETA. Digital Spaces has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.</p>
       <p>Developer's note: the contents and purpose(s) of these tools have not been modified, only their format. The content, purpose(s) and functionality are otherwise identical to the paper-based WIL tool.</p>
+      <p>This site incorporates information from <a href="https://services.onetcenter.org/">O*NET Web Services</a> by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA).</p>
     </footer>
   </div>
 </template>

@@ -39,13 +39,13 @@ xhr.open('GET', url, true);
 xhr.timeout = 10000;
 xhr.setRequestHeader('Accept', 'application/json');
 xhr.ontimeout = function(e) {
-    callback({ error: 'Call to ' + url + ' failed with no response from server' });
+    callback({ error: 'XHR call to ' + url + ' failed with no response from server' });
 };
 xhr.onerror = function(e) {
     if (xhr.statusText != '') {
-    callback({ error: 'Call to ' + url + ' failed with reason: ' + xhr.statusText });
+    callback({ error: 'XHR call to ' + url + ' failed with reason: ' + xhr.statusText });
     } else {
-    callback({ error: 'Call to ' + url + ' failed with unknown reason' });
+    callback({ error: 'XHR call to ' + url + ' failed with unknown reason' });
     }
 };
 xhr.onload = function(e) {
@@ -53,7 +53,7 @@ xhr.onload = function(e) {
     if (xhr.status === 200 || xhr.status === 422) {
         callback(JSON.parse(xhr.responseText));
     } else {
-        callback({ error: 'Call to ' + url + ' failed with error code ' + xhr.status });
+        callback({ error: 'XHR call to ' + url + ' failed with error code ' + xhr.status });
     }
     }
 };
@@ -74,17 +74,17 @@ OnetWebService.prototype._call_fetch = function(url, callback) {
         response.json()
             .then(callback)
             .catch(function(error) {
-            callback({ error: 'Call to ' + url + ' failed on JSON parse' });
+            callback({ error: 'Fetch call to ' + url + ' failed on JSON parse' });
             });
         } else {
-        callback({ error: 'Call to ' + url + ' failed with error code ' + response.status });
+        callback({ error: 'Fetch call to ' + url + ' failed with error code ' + response.status });
         }
     })
     .catch(function(error) {
         if (error.message) {
-        callback({ error: 'Call to ' + url + ' failed with reason: ' + error.message });
+        callback({ error: 'Fetch call to ' + url + ' failed with reason: ' + error.message });
         } else {
-        callback({ error: 'Call to ' + url + ' failed with unknown reason' });
+        callback({ error: 'Fetch call to ' + url + ' failed with unknown reason' });
         }
     });
 };
